@@ -11,8 +11,10 @@ def server(duration,cpu,budget):
     budgetph = float(budget/duration)
     newlist = [0,0,0,0,0,0]
     newvar = budgetph
-    # priceperhour = [0,0,0,0,0,0]
-    # totalprice = 0
+    e = 32
+    f = 32
+    totusecpu = 0
+    totuswcpu = 0
 
     for i in range(6):
         newlist[i] = int(newvar/usEastPrice[i])
@@ -20,8 +22,14 @@ def server(duration,cpu,budget):
             newvar -= (usEastPrice[i]*newlist[i])
     #print(newlist)
 
+    for i in range(6):
+      totusecpu += newlist[i] * e
+      e = e/2
+
     print("region US East")
+    print(f"Total CPU: {int(totusecpu)}")
     print(f"Servers:\nlarge: {newlist[5]}\nxlarge: {newlist[4]}\n2xlarge: {newlist[3]}\n4xlarge: {newlist[2]}\n8xlarge: {newlist[1]}\n10xlarge: {newlist[0]}\n")
+
 
     wnewlist = [0,0,0,0,0]
     wnewvar = budgetph
@@ -30,7 +38,15 @@ def server(duration,cpu,budget):
         if(wnewlist[i] > 0):
             wnewvar -= (usWestPrice[i] * wnewlist[i])
     #print(wnewlist)
+
+    for i in range (5):
+      if(f ==2):
+          f=1
+      totuswcpu += wnewlist[i] * f
+      f = f/2
+
     print("region US West")
+    print(f"Total CPU: {int(totuswcpu)}")
     print(f"Servers:\nlarge: {wnewlist[4]}\n2xlarge: {wnewlist[3]}\n4xlarge: {wnewlist[2]}\n8xlarge: {wnewlist[1]}\n10xlarge: {wnewlist[0]}")
 
   elif(cpu > 0):
@@ -96,6 +112,38 @@ def server(duration,cpu,budget):
     elif(budget > 0):
       # print("Case 3")
       # CASE 3
+      budgetph = float(budget/duration)
+      newelist = [0,0,0,0,0,0]
+      newevar = budgetph
+      e = 32
+      f = 32
+      totusecpu = 0
+      totuswcpu = 0
+      # priceperhour = [0,0,0,0,0,0]
+      # totalprice = 0
+      for i in range(6):
+          newelist[i] = int(newevar/usEastPrice[i])
+          if(newelist[i] > 0):
+              newevar -= (usEastPrice[i]*newelist[i])
+
+      for i in range(6):
+          totusecpu += newelist[i] * e
+          e = e/2
+
+
+      wnewelist = [0,0,0,0,0]
+      wnewevar = budgetph
+      for i in range(5):
+          wnewelist[i] = int(wnewevar/usWestPrice[i])
+          if(wnewelist[i] > 0):
+              wnewevar -= (usWestPrice[i] * wnewelist[i])
+              
+      for i in range (5):
+          if(f ==2):
+              f=1
+          totuswcpu += wnewelist[i] * f
+          f = f/2
+
       newlist = [0,0,0,0,0,0]
       newprice = [0,0,0,0,0,0]
       balance = cpu
@@ -144,19 +192,25 @@ def server(duration,cpu,budget):
       wpricewduration = wfinalPrice * duration
 
 
-      if(pricewduration > budget):
+      if(pricewduration >= budget):
           print(f"\nSorry you will have to pay ${round(pricewduration-budget,1)} more to purchase {cpu} CPU for {duration }hours for a US East server")
       else:
           print("region US East")
-          print(f"Total Cost ${round(pricewduration,1)}")
-          print(f"Servers:\nlarge: {newlist[5]}\nxlarge: {newlist[4]}\n2xlarge: {newlist[3]}\n4xlarge: {newlist[2]}\n8xlarge: {newlist[1]}\n10xlarge: {newlist[0]}\n")
+          print(f"You can buy {int(totusecpu)} CPU for ${budget}")
+          print(f"Total CPU: {int(totusecpu)}")
+          print(f"Servers:\nlarge: {newelist[5]}\nxlarge: {newelist[4]}\n2xlarge: {newelist[3]}\n4xlarge: {newelist[2]}\n8xlarge: {newelist[1]}\n10xlarge: {newelist[0]}\n")
           
-      if(wpricewduration > budget):
-          print(f"\nSorry you will have to pay ${round(wpricewduration-budget,1)} more to purchase {cpu} CPU for {duration} hours for a US West server")
+      if(wpricewduration >= budget):
+          print(f"\nSorry you will have to pay ${round(wpricewduration-budget)} more to purchase {cpu} CPU for {duration} hours for a US West server")
       else: 
           print("region US West")
-          print(f"Total Cost ${round(wpricewduration,1)}")
-          print(f"Servers:\nlarge: {wnewlist[4]}\n2xlarge: {wnewlist[3]}\n4xlarge: {wnewlist[2]}\n8xlarge: {wnewlist[1]}\n10xlarge: {wnewlist[0]}")
+          print(f"You can buy {int(totuswcpu)} CPU for ${budget}")
+          print(f"Total CPU: {int(totuswcpu)}")
+          print(f"Servers:\nlarge: {wnewelist[4]}\n2xlarge: {wnewelist[3]}\n4xlarge: {wnewelist[2]}\n8xlarge: {wnewelist[1]}\n10xlarge: {wnewelist[0]}")
+
+
+
+
 
 if __name__=="__main__":
       name = input("Enter your Name: ")
